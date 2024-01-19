@@ -1,0 +1,160 @@
+Instructions - Selva Viswanath
+
+I have tested everything in Postman and the functions assigned are working fine.
+
+Im new to Django, So i have not implemented JWT for user authentication. (have used traditional password)
+Password validation has beeen implemented
+
+Using body with json content-type for simplicity instead of headers.
+
+Written a python script to populate data with 100 users and 8 contacts each. (populate_data_script.py)
+
+SETUP
+
+    Python=3.12.0
+    DB: 
+        Postgres (psycopg2) change if you want to
+    packages:
+        Django=5.0.1
+        djangorestframework
+        psycopg2
+
+    `pip install  Django=5.0.1 djangorestframework psycopg2`
+
+
+
+
+
+-----
+-----
+Step 1:  Create an user with password
+    POST to url: HOST/users
+
+    Example: MANDATORY FIELDS
+    {
+        "username": "any name",
+        "phone_number": "ur number",
+        "password": "desired password"
+    }
+    Response will be 201 Created.
+
+
+    NOTE: 
+        ** username, phone and password are mandatory.
+        ** password should have atleast 1 lowercase, 1 uppercase, 1 number, 1 symbol[@, #, %, $], and should be atleast 8 and lesser than 18 characters long.
+
+
+
+
+
+
+
+=====
+AUTHENTICATION must
+NO PUBLIC ACCESS
+
+**You need to be authenticated to perform any actions below
+
+Must provide id as request parameter like "users/3"
+
+Must provide password in every request following
+example:
+    {
+        "password":"efADA#$d11",
+        .........
+    }
+=====
+
+
+
+
+
+-----
+Step 2:  Create contacts
+
+    POST - url: HOST/users/{id}/addContacts
+
+    Example: **password is MANDATORY
+             **contacts must be a list
+    {
+        "password": "your password for the appropriate id",
+        "contacts": [
+            {"name": "Contact1", "phone_number": "1111111111"},
+            {"name": "Contact2", "phone_number": "2222222222"},
+            {"name": "Contact3", "phone_number": "3333333333"}
+        ]
+    }
+
+    Note: these will be automatically inserted into GlobalContact Table As well. (skips if already exists)
+
+
+
+-----
+Step 3: List the particular user's contacts
+
+    GET - url: HOST/users/{id}/list_my_contacts
+    
+    {
+        "password":"ur password",
+    }
+
+    Note:  You will only receive the contacts of that particular user,
+    Will not be listed if not authenticated.
+
+
+-----
+Step 4: Mark a contact as spam
+
+    POST - url : HOST/users/{id}/mark_contact_as_spam
+
+    {
+        "phone_number" : "967678",
+        "password":"ur password"
+    }
+
+    Note:
+        *that number will be marked as spam and its "spam_points" will be incremented by 1 in the GlobalContact.spam_points column.
+        *If already marked as spam by the user, nothing will happen.
+
+
+
+
+-----
+Step 5: Get Contacts from Global database
+
+    GET - url : HOST/users/{id}/global-contacts
+
+    {
+        "password":"your password"
+    }
+
+    Response: 200
+        List of all available contacts in the global database with their spam_points
+
+
+
+-----
+Step 6: Search by Name in the Global database (using Query parmameters)
+
+    
+    GET - url: 
+            HOST/users/{id}/global-contacts/search-name{?name=vishwa}   <-- pass the name here as query parameter
+
+    {
+        "password":"your password"
+    }
+
+
+-----
+Step 7: Search by Phone Number in the Global database (using Query parmameters)
+
+    
+    GET - url: 
+            HOST/users/{id}/global-contacts/search-phone-number{?phone_number=4434231215}   <-- pass the number here as query parameter
+
+    {
+        "password":"your password"
+    }
+
+
+
