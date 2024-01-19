@@ -2,9 +2,6 @@ Instructions - Selva Viswanath
 
 I have tested everything in Postman and the functions assigned are working fine.
 
-Im new to Django, So i have not implemented JWT for user authentication. (have used traditional password)
-Password validation has beeen implemented
-
 Using body with json content-type for simplicity instead of headers.
 
 Written a python script to populate data with 100 users and 8 contacts each. (populate_data_script.py)
